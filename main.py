@@ -8,7 +8,7 @@ class DFA:
         self.transition_matrix = transition_matrix
 
     def toregex(self):
-
+        pass
 
 
 def main():
