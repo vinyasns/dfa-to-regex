@@ -73,6 +73,7 @@ def main():
     init_state = input('Enter initial state : ')
     final_states = input('Enter the final states : ')
     final_states = final_states.split()
+    print('Define the transition function : ')
     transition_matrix = [list(map(str, input().split())) for _ in range(len(states))]
     transition_dict = dict(zip(states, transition_matrix))
     print(transition_dict)
