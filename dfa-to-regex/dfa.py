@@ -7,19 +7,25 @@ class DFA:
         self.final_states = final_states
         self.transition_dict = transition_dict
         self.regex = ''
+        self.ds = {}
 
     def get_intermediate_states(self):
         return [state for state in self.states if state not in ([self.init_state] + self.final_states)]
 
     def get_predecessors(self, state):
-        return [key for key, value in self.transition_dict.items() if state in value]
+        return [key for key, value in self.transition_dict.items() if state in value and state != key]
 
     def get_successors(self, state):
-        return [value for key, value in self.transition_dict.items() if state in key]
+        val = [value for key, value in self.transition_dict.items() if state in key]
+        return [j for i in val for j in i if j != state]
 
     def get_if_loop(self, state):
-        t = self.transition_dict[state]
-        return [i for i, v in enumerate(t) if state == v]
+        #t = self.transition_dict[state]
+        #return [i for i, v in enumerate(t) if state == v]
+        if self.ds[state][state] != 'phi':
+            return self.ds[state][state]
+        else:
+            return ''
 
     def toregex(self):
         n = len(self.states)
@@ -31,11 +37,13 @@ class DFA:
                 if len(indices) != 0:
                     dict_states[i][j] = '+'.join([str(self.alphabets[v]) for v in indices])
 
-
+        self.ds = dict_states
         print(dict_states)
         for inter in intermediate_states:
             predecessors = self.get_predecessors(inter)
             successors = self.get_successors(inter)
+            print('predecessor : ', predecessors)
+            print('successor : ', successors)
             #for i in predecessors:
              #   print(inter, " : ", i)
             #print('sucess : ')
@@ -44,7 +52,8 @@ class DFA:
             for i in predecessors:
                 for j in successors:
                     inter_loop = self.get_if_loop(inter)
-                    #temp_dict[i]
+                    print('i : ', i, ' j : ', j)
+                    #dict_states[i][j] = '+'.join((dict_states[i][j], ''.join((dict_states[i][inter], inter_loop + '*', dict_states[inter][j]))))
 
 
 def main():
