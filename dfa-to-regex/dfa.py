@@ -49,11 +49,16 @@ class DFA:
             #print('sucess : ')
             #for i in successors:
              #   print(inter, " : ", i)
+            dd = {r: {c: 'phi' for c in self.states if c != inter} for r in self.states if r != inter}
             for i in predecessors:
                 for j in successors:
                     inter_loop = self.get_if_loop(inter)
                     print('i : ', i, ' j : ', j)
-                    #dict_states[i][j] = '+'.join((dict_states[i][j], ''.join((dict_states[i][inter], inter_loop + '*', dict_states[inter][j]))))
+                    #dict_states[i][j] = '+'.join((dict_states[i][j], ''.join(('('+dict_states[i][inter]+')', '('+inter_loop+')' + '*', '('+dict_states[inter][j]+')'))))
+                    dd[i][j] = dict_states[i][j] = '+'.join((dict_states[i][j], ''.join(('('+dict_states[i][inter]+')', '('+inter_loop+')' + '*', '('+dict_states[inter][j]+')'))))
+        #print(dict_states)
+        print(dd)
+
 
 
 def main():
