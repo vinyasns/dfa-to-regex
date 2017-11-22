@@ -58,7 +58,11 @@ class DFA:
                     dd[i][j] = dict_states[i][j] = '+'.join((dict_states[i][j], ''.join(('('+dict_states[i][inter]+')', '('+inter_loop+')' + '*', '('+dict_states[inter][j]+')'))))
         #print(dict_states)
         print(dd)
-
+        init_loop = self.ds[self.init_state][self.init_state]
+        init_to_final = self.ds[self.init_state][self.final_states[0]] + '(' + self.ds[self.final_states[0]][self.final_states[0]] + ')' + '*'
+        final_to_init = self.ds[self.final_states[0]][self.init_state]
+        re = '(' + init_loop + '+' + init_to_final + final_to_init + ')' + '*' + init_to_final
+        print(re)
 
 
 def main():
