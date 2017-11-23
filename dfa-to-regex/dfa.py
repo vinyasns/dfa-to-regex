@@ -12,7 +12,6 @@ class DFA:
         self.transition_funct = transition_funct
         self.regex = ''
         self.ds = {}
-        self.tt = {}
         self.transition_dict = {}
         self.set_transition_dict()
         #self.draw_graph('', 'first')
