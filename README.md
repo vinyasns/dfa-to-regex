@@ -1,2 +1,2 @@
 # dfa-to-regex
-Using state elimination method
+A Python implementation to convert a Deterministic Finite Automata to Regular Expression using state elimination method
