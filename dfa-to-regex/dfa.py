@@ -57,8 +57,9 @@ class DFA:
                     #dict_states[i][j] = '+'.join((dict_states[i][j], ''.join(('('+dict_states[i][inter]+')', '('+inter_loop+')' + '*', '('+dict_states[inter][j]+')'))))
                     dict_states[i][j] = '+'.join(('('+dict_states[i][j]+')', ''.join(('('+dict_states[i][inter]+')', '('+inter_loop+')' + '*', '('+dict_states[inter][j]+')'))))
 
+            dict_states = {r: {c: v for c, v in val.items() if c != inter} for r, val in dict_states.items() if r != inter}
 
-            #temp_states =
+                    #temp_states =
         print(dict_states)
         #print(dd)
         init_loop = dict_states[self.init_state][self.init_state]
