@@ -1,6 +1,7 @@
 from graphviz import Digraph
 import copy
 
+
 class DFA:
 
     def __init__(self, states, alphabets, init_state, final_states, transition_funct):
@@ -47,19 +48,12 @@ class DFA:
         return [state for state in self.states if state not in ([self.init_state] + self.final_states)]
 
     def get_predecessors(self, state):
-        #return [key for key, value in self.transition_dict.items() if state in value and state != key]
         return [key for key, value in self.ds.items() if state in value.keys() and value[state] != 'ϕ' and key != state]
 
     def get_successors(self, state):
         return [key for key, value in self.ds[state].items() if value != 'ϕ' and key != state]
-        #val = [value for key, value in self.transition_dict.items() if state in key]
-        #return [j for i in val for j in i if j != state]
-        #return [i for i in val if i != state]
-
 
     def get_if_loop(self, state):
-        #t = self.transition_dict[state]
-        #return [i for i, v in enumerate(t) if state == v]
         if self.ds[state][state] != 'ϕ':
             return self.ds[state][state]
         else:
@@ -67,37 +61,32 @@ class DFA:
 
     def toregex(self):
         intermediate_states = self.get_intermediate_states()
-
         dict_states = self.ds
-        #print(dict_states)
 
         for inter in intermediate_states:
             predecessors = self.get_predecessors(inter)
             successors = self.get_successors(inter)
-            print('inter : ', inter)
-            print('predecessor : ', predecessors)
-            print('successor : ', successors)
+            #print('inter : ', inter)
+            #print('predecessor : ', predecessors)
+            #print('successor : ', successors)
 
             #dd = {r: {c: 'ϕ' for c in self.states if c != inter} for r in self.states if r != inter}
             ##dd = {r: {c: 'ϕ' for c in temp_states if c != inter} for r in temp_states if r != inter}
             for i in predecessors:
                 for j in successors:
                     inter_loop = self.get_if_loop(inter)
-                    print('i : ', i, ' j : ', j)
-                    #dict_states[i][j] = '+'.join((dict_states[i][j], ''.join(('('+dict_states[i][inter]+')', '('+inter_loop+')' + '*', '('+dict_states[inter][j]+')'))))
+                    #print('i : ', i, ' j : ', j)
                     dict_states[i][j] = '+'.join(('('+dict_states[i][j]+')', ''.join(('('+dict_states[i][inter]+')', '('+inter_loop+')' + '*', '('+dict_states[inter][j]+')'))))
 
-            dict_states = {r: {c: v for c, v in val.items() if c != inter} for r, val in dict_states.items() if r != inter}
-            self.ds = dict_states
-                    #temp_states =
-        #print(dict_states)
-        #print(dd)
+            dict_states = {r: {c: v for c, v in val.items() if c != inter} for r, val in dict_states.items() if r != inter} #remove inter node
+            self.ds = copy.deepcopy(dict_states)
+
         init_loop = dict_states[self.init_state][self.init_state]
         init_to_final = dict_states[self.init_state][self.final_states[0]] + '(' + dict_states[self.final_states[0]][self.final_states[0]] + ')' + '*'
         final_to_init = dict_states[self.final_states[0]][self.init_state]
         re = '(' + '('+init_loop+')' + '+' + '('+init_to_final+')' + '('+final_to_init+')' + ')' + '*' + '('+init_to_final+')'
         re = '(' + re + ')*'
-        #print(re)
+        print('Regular Expression : ', re)
         return re
 
 
@@ -112,12 +101,13 @@ def main():
     print('Define the transition function : ')
     transition_matrix = [list(map(str, input().split())) for _ in range(len(states))]
     transition_funct = dict(zip(states, transition_matrix))
-    print('transition funct : ', transition_funct)
+    #print('transition funct : ', transition_funct)
+
     dfa = DFA(states, alphabets, init_state, final_states, transition_funct)
     regex = dfa.toregex()
     dfa.draw_graph(regex, 'second')
-    print(dfa.transition_dict)
-    print(dfa.ds)
+    #print(dfa.transition_dict)
+    #print(dfa.ds)
 
 
 if __name__ == '__main__':
